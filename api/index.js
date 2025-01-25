@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import userRoutes from './routes/user.route.js';
 
 dotenv.config();
 
@@ -11,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 const dbURI = process.env.MONGO_URL;
 
 // Connect to MongoDB
-mongoose.connect(dbURI)
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log('Connected to MongoDB');
         // Start the server only after successful connection
@@ -22,6 +23,9 @@ mongoose.connect(dbURI)
     .catch((err) => {
         console.error('Failed to connect to MongoDB', err);
     });
+
+// Use routes
+app.use('/api/user', userRoutes);
 
 // Define a route for the root URL
 app.get('/', (req, res) => {
