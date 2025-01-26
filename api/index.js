@@ -2,11 +2,15 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRoutes from './routes/user.route.js';
+import authRoutes from './routes/auth.route.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Middleware to parse JSON bodies
+app.use(express.json());
 
 // MongoDB connection string
 const dbURI = process.env.MONGO_URL;
@@ -26,6 +30,7 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // Use routes
 app.use('/api/user', userRoutes);
+app.use('/api/auth', authRoutes);
 
 // Define a route for the root URL
 app.get('/', (req, res) => {
