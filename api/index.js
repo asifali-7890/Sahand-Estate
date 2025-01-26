@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
 
@@ -9,8 +10,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware to parse JSON bodies
+// Middleware to parse JSON bodies and cookies
 app.use(express.json());
+app.use(cookieParser());
 
 // MongoDB connection string
 const dbURI = process.env.MONGO_URL;
@@ -41,5 +43,5 @@ app.get('/', (req, res) => {
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Something went wrong!';
-    res.status(statusCode).json({ message, statusCode });
+    res.status(statusCode).json({ message, error: err.message });
 });
