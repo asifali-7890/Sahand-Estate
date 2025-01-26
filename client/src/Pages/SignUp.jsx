@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom'
+import axios from 'axios';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -9,18 +10,24 @@ const SignUp = () => {
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { value, id } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [id]: value
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log(formData);
+    try {
+      const response = await axios.post('/api/auth/signup', formData);
+      console.log('Successfully signed up:', response.data);
+    } catch (error) {
+      console.error('Error:', error.response ? error.response.data : error.message);
+    }
   };
+
+
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">

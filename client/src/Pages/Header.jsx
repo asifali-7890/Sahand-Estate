@@ -22,7 +22,7 @@ export default function Header() {
                 <div className='flex gap-2'>
                     <ul className='flex gap-2'>
                         <li className='text-slate-500 hidden sm:inline hover:underline'>
-                            <Link to="/home">
+                            <Link to="/">
                                 Home
                             </Link>
                         </li>
