@@ -36,3 +36,10 @@ app.use('/api/auth', authRoutes);
 app.get('/', (req, res) => {
     res.send({ name: 'Hello, World!' });
 });
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Something went wrong!';
+    res.status(statusCode).json({ message, statusCode });
+});
