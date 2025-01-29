@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { signinStart, signinSuccess, signinFailure } from '../redux/user/userSlice';
+import OAuth from '../components/OAuth';
+import { FaSpinner } from "react-icons/fa"; // Import loading spinner icon
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +27,7 @@ const SignIn = () => {
     e.preventDefault();
     dispatch(signinStart());
     try {
-      const response = await axios.post('/api/auh/signin', formData);
+      const response = await axios.post('/api/auth/signin', formData);
       dispatch(signinSuccess(response.data.user));
       console.log('Successfully signed in:', response.data);
       // Handle successful sign-in (e.g., redirect to dashboard)
@@ -66,12 +68,22 @@ const SignIn = () => {
         </div>
         <button
           type="submit"
-          className="w-full shadow-lg bg-red-500 text-white py-2 rounded-full transform hover:scale-110 transition-transform duration-200 ease-in-out hover:bg-blue-600"
+          className={`w-full shadow-lg text-white py-2 rounded-full font-medium transition-all duration-200 ease-in-out transform ${isFetching
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-red-500 hover:scale-105 hover:bg-blue-600 active:scale-95"
+            }`}
           disabled={isFetching}
         >
-          Sign In
+          {isFetching ? (
+            <div className="flex items-center justify-center">
+              <FaSpinner className="animate-spin mr-2" /> Processing...
+            </div>
+          ) : (
+            "Sign In"
+          )}
         </button>
         {error && <p className="mt-4 text-center text-red-500">Sign in failed. Please try again.</p>}
+        <OAuth />
         <p className="mt-4 text-center">Dont have an account? <Link to='/signup' className="text-blue-500 hover:underline">Sign Up</Link></p>
       </form>
     </div>

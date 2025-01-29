@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import axios from 'axios';
+import OAuth from '../components/OAuth';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -26,8 +27,6 @@ const SignUp = () => {
       console.error('Error:', error.response ? error.response.data : error.message);
     }
   };
-
-
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -71,10 +70,11 @@ const SignUp = () => {
         </div>
         <button
           type="submit"
-          className="w-full shadow-lg cursor-pointer bg-red-500 text-white py-2 rounded-full transform hover:scale-110 transition-transform duration-200 ease-in-out hover:bg-blue-600"
+          className="w-full shadow-lg bg-red-500 text-white py-2 rounded-full font-medium transition-all duration-200 ease-in-out transform hover:scale-105 hover:bg-blue-600 active:scale-95 cursor-pointer"
         >
           Sign Up
         </button>
+        <OAuth />
         <p>Have an Account? <Link to='/signin' className=' mt-2 font-bold text-lg'>Sign In</Link></p>
       </form>
     </div>
