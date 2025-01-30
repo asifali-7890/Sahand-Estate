@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { signinStart, signinSuccess, signinFailure } from '../redux/user/userSlice';
 import OAuth from '../components/OAuth';
 import { FaSpinner } from "react-icons/fa"; // Import loading spinner icon
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -30,6 +31,7 @@ const SignIn = () => {
       const response = await axios.post('/api/auth/signin', formData);
       dispatch(signinSuccess(response.data.user));
       console.log('Successfully signed in:', response.data);
+      navigate('/')
       // Handle successful sign-in (e.g., redirect to dashboard)
     } catch (error) {
       dispatch(signinFailure(error.message));

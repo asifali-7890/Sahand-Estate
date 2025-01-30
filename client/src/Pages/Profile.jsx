@@ -1,15 +1,20 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useRef, useState } from 'react';
 import axios from 'axios';
+import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/user/userSlice'; // Import the new actions
 
 const Profile = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
+  const isFetching = useSelector((state) => state.user.isFetching);
+  const error = useSelector((state) => state.user.error);
+  const dispatch = useDispatch();
   const fileRef = useRef();
 
   const [formData, setFormData] = useState({
     username: currentUser?.username || '',
     email: currentUser?.email || '',
-    password: ''
+    password: '',
+    avatar: currentUser?.avatar || ''
   });
 
   const handleChange = (e) => {
@@ -22,12 +27,17 @@ const Profile = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    dispatch(updateUserStart());
     try {
-      const response = await axios.put('/api/user/update', formData); // Assuming you have an update endpoint
+      const response = await axios.put(`/api/user/update/${currentUser._id}`, formData, {
+        withCredentials: true // Ensure cookies are sent with the request
+      });
       console.log('Profile updated:', response.data);
+      dispatch(updateUserSuccess(response.data.user)); // Update the Redux state with the new user data
       // Handle successful update (e.g., show a success message)
     } catch (error) {
       console.error('Error updating profile:', error.response ? error.response.data : error.message);
+      dispatch(updateUserFailure());
     }
   };
 
@@ -81,16 +91,17 @@ const Profile = () => {
               value={formData.password}
               onChange={handleChange}
               className="w-full px-3 py-2 border rounded"
-              required
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-full mb-4"
+            className={`w-full bg-blue-600 text-white py-2 rounded-full mb-4 ${isFetching ? 'cursor-not-allowed opacity-50' : ''}`}
+            disabled={isFetching}
           >
-            Update
+            {isFetching ? 'Updating...' : 'Update'}
           </button>
         </form>
+        {error && <p className="mt-4 text-center text-red-500">Error updating profile. Please try again.</p>}
         <div className="flex justify-between mt-4">
           <span
             onClick={handleDeleteAccount}
