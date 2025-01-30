@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import axios from 'axios';
 
 const Profile = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
-
+  const fileRef = useRef();
 
   const [formData, setFormData] = useState({
     username: currentUser?.username || '',
@@ -48,7 +48,8 @@ const Profile = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
-        <img src={currentUser?.avatar} alt="Avatar" className="w-24 h-24 rounded-full mx-auto mb-4" />
+        <input type="file" ref={fileRef} hidden accept='image/*' />
+        <img onClick={() => fileRef.current.click()} src={currentUser?.avatar} alt="Avatar" className="w-24 h-24 rounded-full mx-auto mb-4" />
         <form onSubmit={handleUpdate}>
           <div className="mb-4">
             <label htmlFor="username" className="block text-gray-700">Username</label>
