@@ -109,3 +109,8 @@ export const google = async (req, res, next) => {
         next(createError(500, 'Error during Google sign-in'));
     }
 };
+
+export const signout = (req, res) => {
+    res.clearCookie('auth_token');
+    res.status(200).json({ message: 'Sign out successful' });
+};

@@ -1,13 +1,16 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useRef, useState } from 'react';
 import axios from 'axios';
-import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/user/userSlice'; // Import the new actions
+import { useNavigate } from 'react-router-dom';
+import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, signOutUserStart, signOutUserSuccess, signOutUserFailure } from '../redux/user/userSlice'; // Import the new actions
 
 const Profile = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
   const isFetching = useSelector((state) => state.user.isFetching);
   const error = useSelector((state) => state.user.error);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const fileRef = useRef();
 
   const [formData, setFormData] = useState({
@@ -16,6 +19,8 @@ const Profile = () => {
     password: '',
     avatar: currentUser?.avatar || ''
   });
+
+  const [success, setSuccess] = useState(false); // State variable for success message
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -28,31 +33,50 @@ const Profile = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     dispatch(updateUserStart());
+    setSuccess(false); // Reset success message
     try {
       const response = await axios.put(`/api/user/update/${currentUser._id}`, formData, {
         withCredentials: true // Ensure cookies are sent with the request
       });
       console.log('Profile updated:', response.data);
       dispatch(updateUserSuccess(response.data.user)); // Update the Redux state with the new user data
-      // Handle successful update (e.g., show a success message)
+      setSuccess(true); // Set success message
     } catch (error) {
       console.error('Error updating profile:', error.response ? error.response.data : error.message);
       dispatch(updateUserFailure());
     }
   };
 
-  const handleSignOut = () => {
-    // Handle sign out (e.g., redirect to sign in page)
+  const handleSignOut = async () => {
+    dispatch(signOutUserStart());
+    try {
+      await axios.post('/api/auth/signout', {}, {
+        withCredentials: true // Ensure cookies are sent with the request
+      });
+      dispatch(signOutUserSuccess());
+      // Handle sign out (e.g., redirect to sign in page)
+    } catch (error) {
+      console.error('Error signing out:', error.response ? error.response.data : error.message);
+      dispatch(signOutUserFailure());
+    }
   };
 
   const handleDeleteAccount = async () => {
+    dispatch(deleteUserStart());
     try {
-      await axios.delete('/api/user/delete'); // Assuming you have a delete endpoint
-
+      await axios.delete(`/api/user/delete/${currentUser._id}`, {
+        withCredentials: true // Ensure cookies are sent with the request
+      });
+      dispatch(deleteUserSuccess());
       // Handle account deletion (e.g., redirect to sign up page)
     } catch (error) {
       console.error('Error deleting account:', error.response ? error.response.data : error.message);
+      dispatch(deleteUserFailure());
     }
+  };
+
+  const handleCreateListing = () => {
+    navigate('/create-listing');
   };
 
   return (
@@ -102,6 +126,13 @@ const Profile = () => {
           </button>
         </form>
         {error && <p className="mt-4 text-center text-red-500">Error updating profile. Please try again.</p>}
+        {success && <p className="mt-4 text-center text-green-500">Profile updated successfully!</p>}
+        <button
+          onClick={handleCreateListing}
+          className="w-full bg-green-600 text-white py-2 rounded-full mb-4"
+        >
+          Create Listing
+        </button>
         <div className="flex justify-between mt-4">
           <span
             onClick={handleDeleteAccount}

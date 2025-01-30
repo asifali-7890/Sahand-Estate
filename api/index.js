@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
+import listingRoutes from './routes/listing.route.js'; // Import the listing routes
+
 
 dotenv.config();
 
@@ -41,6 +43,8 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 // Use routes
 app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/listing', listingRoutes); // Use the listing routes
+
 
 // Define a route for the root URL
 app.get('/', (req, res) => {

@@ -38,3 +38,24 @@ export const updateUser = async (req, res, next) => {
         next(createError(500, 'Error updating profile'));
     }
 };
+
+export const deleteUser = async (req, res, next) => {
+    const { id } = req.params;
+
+    try {
+        // Ensure the authenticated user is deleting their own profile
+        if (req.user.id !== id) {
+            return next(createError(403, 'Access denied. You can only delete your own profile.'));
+        }
+
+        const user = await User.findByIdAndDelete(id);
+        if (!user) {
+            return next(createError(404, 'User not found'));
+        }
+
+        res.status(200).json({ message: 'User deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        next(createError(500, 'Error deleting user'));
+    }
+};
