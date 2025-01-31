@@ -46,7 +46,7 @@ const CreateListing = () => {
                 }
             });
             console.log('Listing created:', response.data);
-            navigate(`/listings/${currentUser._id}`); // Redirect to listings page after creation
+            navigate(`/listings/${response.data.listing._id}`); // Redirect to listings page after creation
         } catch (error) {
             console.error('Listing creation error:', error);
             setError('Error creating listing. Please try again.');
