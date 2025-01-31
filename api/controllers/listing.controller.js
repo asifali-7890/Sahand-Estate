@@ -2,7 +2,7 @@ import Listing from '../models/listing.model.js';
 import { createError } from '../utils/errorHandler.js';
 
 export const createListing = async (req, res, next) => {
-    const { name, description, address, regularPrice, discountPrice, bathrooms, bedrooms, furnished, parking, type, offer, imageUrls, userRef } = req.body;
+    const { name, description, address, regularPrice, discountPrice, bathrooms, bedrooms, furnished, parking, type, offer, userRef } = req.body;
 
     try {
         const newListing = new Listing({
@@ -17,7 +17,6 @@ export const createListing = async (req, res, next) => {
             parking,
             type,
             offer,
-            imageUrls,
             userRef
         });
 

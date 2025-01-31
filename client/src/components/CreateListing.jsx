@@ -18,55 +18,17 @@ const CreateListing = () => {
         bedrooms: 1,
         bathrooms: 1,
         regularPrice: 50,
-        discountPrice: 0,
-        imageUrls: []
+        discountPrice: 0
     });
 
-    const [files, setFiles] = useState([]);
-    const [uploading, setUploading] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [imageUploadError, setImageUploadError] = useState('');
 
     const handleChange = (e) => {
         const { id, value, type, checked } = e.target;
         setFormData({
             ...formData,
             [id]: type === 'checkbox' ? checked : value
-        });
-    };
-
-    const handleImageSubmit = async () => {
-        setUploading(true);
-        setImageUploadError('');
-        try {
-            const formData = new FormData();
-            Array.from(files).forEach(file => {
-                formData.append('images', file);
-            });
-            const response = await axios.post('/api/upload', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${currentUser.token}`
-                }
-            });
-            setFormData({
-                ...formData,
-                imageUrls: response.data.urls
-            });
-            setUploading(false);
-        } catch (error) {
-            console.error('Error uploading images:', error);
-            setImageUploadError('Error uploading images. Please try again.');
-            setUploading(false);
-        }
-    };
-
-    const handleRemoveImage = (index) => {
-        const newImageUrls = formData.imageUrls.filter((_, i) => i !== index);
-        setFormData({
-            ...formData,
-            imageUrls: newImageUrls
         });
     };
 
@@ -84,7 +46,7 @@ const CreateListing = () => {
                 }
             });
             console.log('Listing created:', response.data);
-            navigate('/listings'); // Redirect to listings page after creation
+            navigate(`/listings/${currentUser._id}`); // Redirect to listings page after creation
         } catch (error) {
             console.error('Listing creation error:', error);
             setError('Error creating listing. Please try again.');
@@ -93,11 +55,11 @@ const CreateListing = () => {
     };
 
     return (
-        <main className='p-3 max-w-4xl mx-auto'>
+        <main className='p-3 max-w-2xl mx-auto'>
             <h1 className='text-3xl font-semibold text-center my-7'>
                 Create a Listing
             </h1>
-            <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-4'>
+            <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
                 <div className='flex flex-col gap-4 flex-1'>
                     <input
                         type='text'
@@ -131,9 +93,10 @@ const CreateListing = () => {
                     <div className='flex gap-6 flex-wrap'>
                         <div className='flex gap-2'>
                             <input
-                                type='checkbox'
+                                type='radio'
+                                name='type'
                                 id='type'
-                                className='w-5'
+                                value='sale'
                                 onChange={handleChange}
                                 checked={formData.type === 'sale'}
                             />
@@ -141,9 +104,10 @@ const CreateListing = () => {
                         </div>
                         <div className='flex gap-2'>
                             <input
-                                type='checkbox'
+                                type='radio'
+                                name='type'
                                 id='type'
-                                className='w-5'
+                                value='rent'
                                 onChange={handleChange}
                                 checked={formData.type === 'rent'}
                             />
@@ -247,62 +211,13 @@ const CreateListing = () => {
                         )}
                     </div>
                 </div>
-                <div className='flex flex-col flex-1 gap-4'>
-                    <p className='font-semibold'>
-                        Images:
-                        <span className='font-normal text-gray-600 ml-2'>
-                            The first image will be the cover (max 6)
-                        </span>
-                    </p>
-                    <div className='flex gap-4'>
-                        <input
-                            onChange={(e) => setFiles(e.target.files)}
-                            className='p-3 border border-gray-300 rounded w-full'
-                            type='file'
-                            id='images'
-                            accept='image/*'
-                            multiple
-                        />
-                        <button
-                            type='button'
-                            disabled={uploading}
-                            onClick={handleImageSubmit}
-                            className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80'
-                        >
-                            {uploading ? 'Uploading...' : 'Upload'}
-                        </button>
-                    </div>
-                    <p className='text-red-700 text-sm'>
-                        {imageUploadError && imageUploadError}
-                    </p>
-                    {formData.imageUrls.length > 0 &&
-                        formData.imageUrls.map((url, index) => (
-                            <div
-                                key={url}
-                                className='flex justify-between p-3 border items-center'
-                            >
-                                <img
-                                    src={url}
-                                    alt='listing image'
-                                    className='w-20 h-20 object-contain rounded-lg'
-                                />
-                                <button
-                                    type='button'
-                                    onClick={() => handleRemoveImage(index)}
-                                    className='p-3 text-red-700 rounded-lg uppercase hover:opacity-75'
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        ))}
-                    <button
-                        disabled={loading || uploading}
-                        className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
-                    >
-                        {loading ? 'Creating...' : 'Create listing'}
-                    </button>
-                    {error && <p className='text-red-700 text-sm'>{error}</p>}
-                </div>
+                <button
+                    disabled={loading}
+                    className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
+                >
+                    {loading ? 'Creating...' : 'Create listing'}
+                </button>
+                {error && <p className='text-red-700 text-sm'>{error}</p>}
             </form>
         </main>
     );
