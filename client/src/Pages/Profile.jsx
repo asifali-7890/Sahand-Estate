@@ -21,6 +21,8 @@ const Profile = () => {
   });
 
   const [success, setSuccess] = useState(false); // State variable for success message
+  const [listings, setListings] = useState([]); // State variable for user listings
+  const [showListingsError, setShowListingsError] = useState(false); // State variable for listing errors
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -79,6 +81,39 @@ const Profile = () => {
     navigate('/create-listing');
   };
 
+  const handleShowListing = async () => {
+    try {
+      setShowListingsError(false);
+      const response = await axios.get(`/api/user/listings/${currentUser._id}`, {
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`
+        }
+      });
+      console.log('User listings:', response.data);
+      setListings(response.data.listings); // Set the listings state
+    } catch (error) {
+      setShowListingsError(true);
+      console.error('Error fetching user listings:', error.response ? error.response.data : error.message);
+    }
+  };
+
+  const handleDeleteListing = async (id) => {
+    try {
+      await axios.delete(`/api/listing/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`
+        }
+      });
+      setListings(listings.filter(listing => listing._id !== id));
+    } catch (error) {
+      console.error('Error deleting listing:', error.response ? error.response.data : error.message);
+    }
+  };
+
+  const handleEditListing = (id) => {
+    navigate(`/edit-listing/${id}`);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
@@ -133,6 +168,40 @@ const Profile = () => {
         >
           Create Listing
         </button>
+        <button
+          onClick={handleShowListing}
+          className="w-full bg-yellow-600 text-white py-2 rounded-full mb-4"
+        >
+          Show Listings
+        </button>
+        {showListingsError && <p className="mt-4 text-center text-red-500">Error fetching listings. Please try again.</p>}
+        <div className="mt-4">
+          {listings.map((listing) => (
+            <div key={listing._id} className="p-4 border rounded mb-4 bg-white shadow-md">
+              <h3 className="text-lg font-semibold">{listing.name}</h3>
+              <p>{listing.description}</p>
+              <p>{listing.address}</p>
+              <p>{listing.type}</p>
+              <p>{listing.bedrooms} Beds, {listing.bathrooms} Baths</p>
+              <p>Price: ${listing.regularPrice}</p>
+              {listing.offer && <p>Discounted Price: ${listing.discountPrice}</p>}
+              <div className="flex justify-end gap-2 mt-4">
+                <button
+                  onClick={() => handleEditListing(listing._id)}
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDeleteListing(listing._id)}
+                  className="bg-red-500 text-white px-4 py-2 rounded"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
         <div className="flex justify-between mt-4">
           <span
             onClick={handleDeleteAccount}
