@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useRef, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, signOutUserStart, signOutUserSuccess, signOutUserFailure } from '../redux/user/userSlice'; // Import the new actions
 
 const Profile = () => {
@@ -186,6 +186,9 @@ const Profile = () => {
               <p>Price: ${listing.regularPrice}</p>
               {listing.offer && <p>Discounted Price: ${listing.discountPrice}</p>}
               <div className="flex justify-end gap-2 mt-4">
+                <Link to={`/listing/${listing._id}`} className="bg-blue-500 text-white px-4 py-2 rounded">
+                  View
+                </Link>
                 <button
                   onClick={() => handleEditListing(listing._id)}
                   className="bg-blue-500 text-white px-4 py-2 rounded"

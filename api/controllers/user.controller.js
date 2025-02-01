@@ -59,3 +59,18 @@ export const deleteUser = async (req, res, next) => {
         next(createError(500, 'Error deleting user'));
     }
 };
+
+export const getUserById = async (req, res, next) => {
+    const { id } = req.params;
+
+    try {
+        const user = await User.findById(id).select('-password');
+        if (!user) {
+            return next(createError(404, 'User not found'));
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        next(createError(500, 'Error fetching user'));
+    }
+};
