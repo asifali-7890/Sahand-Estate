@@ -50,6 +50,8 @@ export default function Listing() {
         fetchListing();
     }, [params.listingId]);
 
+    const defaultImageUrl = 'https://th.bing.com/th/id/OSK.HEROJ3SdLNOzliCwuCEa-uSrXE6Wd-9ssC0-lLCFLNViAyA?rs=1&pid=ImgDetMain';
+
     return (
         <main>
             {loading && <p className='text-center my-7 text-2xl'>Loading...</p>}
@@ -59,7 +61,7 @@ export default function Listing() {
             {listing && !loading && !error && (
                 <div>
                     <Swiper navigation>
-                        {listing.imageUrls?.map((url) => (
+                        {(listing.imageUrls && listing.imageUrls.length > 0 ? listing.imageUrls : [defaultImageUrl]).map((url) => (
                             <SwiperSlide key={url}>
                                 <div
                                     className='h-[550px]'

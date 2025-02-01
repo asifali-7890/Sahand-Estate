@@ -8,7 +8,8 @@ import SignIn from './Pages/SignIn';
 import PrivateRoute from './components/PrivateRoute';
 import CreateListing from './components/CreateListing';
 import UpdateListing from './components/UpdateListing';
-import Listing from './components/Listing'; // Import Listing
+import Listing from './components/Listing';
+import Search from './components/Search'; // Import Search
 
 const App = () => {
   return (
@@ -24,7 +25,8 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/listing/:listingId" element={<Listing />} /> {/* Add this line */}
+        <Route path="/listing/:listingId" element={<Listing />} />
+        <Route path="/search" element={<Search />} /> {/* Add this line */}
       </Routes>
     </Router>
   );

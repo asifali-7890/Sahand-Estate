@@ -110,9 +110,8 @@ const Profile = () => {
     }
   };
 
-  const handleEditListing = (id) => {
-    navigate(`/edit-listing/${id}`);
-  };
+  const defaultImageUrl = 'https://th.bing.com/th/id/OIP.xmdlzEVAMA3gR1-bUXLcHwHaFm?w=1453&h=1100&rs=1&pid=ImgDetMain';
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
@@ -177,34 +176,39 @@ const Profile = () => {
         {showListingsError && <p className="mt-4 text-center text-red-500">Error fetching listings. Please try again.</p>}
         <div className="mt-4">
           {listings.map((listing) => (
-            <div key={listing._id} className="p-4 border rounded mb-4 bg-white shadow-md">
-              <h3 className="text-lg font-semibold">{listing.name}</h3>
-              <p>{listing.description}</p>
-              <p>{listing.address}</p>
-              <p>{listing.type}</p>
-              <p>{listing.bedrooms} Beds, {listing.bathrooms} Baths</p>
-              <p>Price: ${listing.regularPrice}</p>
-              {listing.offer && <p>Discounted Price: ${listing.discountPrice}</p>}
-              <div className="flex justify-end gap-2 mt-4">
-                <Link to={`/listing/${listing._id}`} className="bg-blue-500 text-white px-4 py-2 rounded">
-                  View
-                </Link>
-                <button
-                  onClick={() => handleEditListing(listing._id)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                  Edit
-                </button>
+            <div
+              key={listing._id}
+              className="border rounded-lg p-3 flex justify-between items-center gap-4"
+            >
+              <Link to={`/listing/${listing._id}`}>
+                <img
+                  src={listing.imageUrls?.[0] || defaultImageUrl}
+                  alt="listing cover"
+                  className="h-16 w-16 object-contain"
+                />
+              </Link>
+              <Link
+                className="text-slate-700 font-semibold hover:underline truncate flex-1"
+                to={`/listing/${listing._id}`}
+              >
+                <p>{listing.name}</p>
+              </Link>
+
+              <div className="flex flex-col items-center">
                 <button
                   onClick={() => handleDeleteListing(listing._id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded"
+                  className="text-red-700 uppercase"
                 >
                   Delete
                 </button>
+                <Link to={`/edit-listing/${listing._id}`}>
+                  <button className="text-green-700 uppercase">Edit</button>
+                </Link>
               </div>
             </div>
           ))}
         </div>
+
         <div className="flex justify-between mt-4">
           <span
             onClick={handleDeleteAccount}
