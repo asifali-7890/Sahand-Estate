@@ -56,6 +56,7 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '/client/dist/index.html'));
 });
 
+// console.log(path.join(__dirname, '../client/dist/index.html'));
 
 // Define a route for the root URL
 app.get('/', (req, res) => {
