@@ -121,7 +121,7 @@ const Profile = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
         <input type="file" ref={fileRef} hidden accept='image/*' />
-        <img src={currentUser?.avatar} alt="Avatar" className="w-24 h-24 rounded-full mx-auto mb-4 object-cover" />
+        <img crossOrigin="anonymous" src={currentUser?.avatar} alt="Avatar" className="w-24 h-24 rounded-full mx-auto mb-4 object-cover" />
         <form onSubmit={handleUpdate}>
           <div className="mb-4">
             <label htmlFor="username" className="block text-gray-700">Username</label>
@@ -197,6 +197,7 @@ const Profile = () => {
               <div className="flex flex-col sm:flex-row gap-2 items-center">
                 <Link to={`/listing/${listing._id}`} className="flex-shrink-0 self-start">
                   <img
+                    crossOrigin="anonymous"
                     src={listing.imageUrls?.[0] || defaultImageUrl}
                     alt={`${listing.name} cover`}
                     className="h-20 w-20 rounded-md object-cover"

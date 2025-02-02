@@ -64,7 +64,7 @@ export default function Header() {
                         <li className='text-slate-500 hover:underline'>
                             {currentUser ? (
                                 <Link to="/profile">
-                                    <img src={currentUser?.avatar} alt="Avatar" className="w-8 h-8 rounded-full object-cover" />
+                                    <img crossOrigin="anonymous" src={currentUser?.avatar} alt="Avatar" className="w-8 h-8 rounded-full object-cover" />
                                 </Link>
                             ) : (
                                 <Link to="/signin">
