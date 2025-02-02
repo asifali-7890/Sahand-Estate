@@ -45,8 +45,8 @@ const CreateListing = () => {
                     Authorization: `Bearer ${currentUser.token}`
                 }
             });
-            console.log('Listing created:', response.data);
-            navigate(`/listings/${response.data.listing._id}`); // Redirect to listings page after creation
+            // console.log('Listing created:', response.data);
+            navigate(`/listing/${response.data.listing._id}`); // Redirect to listings page after creation
         } catch (error) {
             console.error('Listing creation error:', error);
             setError('Error creating listing. Please try again.');
@@ -98,6 +98,7 @@ const CreateListing = () => {
                                 id='type'
                                 value='sale'
                                 onChange={handleChange}
+                                required
                                 checked={formData.type === 'sale'}
                             />
                             <span>Sell</span>
@@ -109,6 +110,7 @@ const CreateListing = () => {
                                 id='type'
                                 value='rent'
                                 onChange={handleChange}
+                                required
                                 checked={formData.type === 'rent'}
                             />
                             <span>Rent</span>

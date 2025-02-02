@@ -8,10 +8,10 @@ export const verifyToken = (req, res, next) => {
     }
 
     try {
-        console.log('token', token);
-        console.log('Before verification....');
+        // console.log('token', token);
+        // console.log('Before verification....');
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log('decoded', decoded);
+        // console.log('decoded', decoded);
         req.user = decoded;
         next();
     } catch (error) {

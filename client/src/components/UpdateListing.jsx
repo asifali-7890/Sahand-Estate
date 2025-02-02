@@ -59,12 +59,12 @@ const UpdateListing = () => {
         setLoading(true);
         setError('');
         try {
-            const response = await axios.put(`/api/listing/update/${listingId}`, formData, {
+            await axios.put(`/api/listing/update/${listingId}`, formData, {
                 headers: {
                     Authorization: `Bearer ${currentUser.token}`
                 }
             });
-            console.log('Listing updated:', response.data);
+            // console.log('Listing updated:', response.data);
             navigate(`/profile`); // Redirect to profile page after update
         } catch (error) {
             console.error('Listing update error:', error);

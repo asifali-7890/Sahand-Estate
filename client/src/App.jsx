@@ -10,6 +10,7 @@ import CreateListing from './components/CreateListing';
 import UpdateListing from './components/UpdateListing';
 import Listing from './components/Listing';
 import Search from './components/Search'; // Import Search
+import Footer from './components/Footer'; // Import Footer
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/listing/:listingId" element={<Listing />} />
         <Route path="/search" element={<Search />} /> {/* Add this line */}
       </Routes>
+      <Footer /> {/* Add Footer */}
     </Router>
   );
 }

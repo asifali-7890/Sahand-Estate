@@ -5,6 +5,8 @@ import axios from 'axios';
 import { signinStart, signinSuccess, signinFailure } from '../redux/user/userSlice';
 import OAuth from '../components/OAuth';
 import { FaSpinner } from "react-icons/fa"; // Import loading spinner icon
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -30,13 +32,14 @@ const SignIn = () => {
     try {
       const response = await axios.post('/api/auth/signin', formData);
       dispatch(signinSuccess(response.data.user));
-      console.log('Successfully signed in:', response.data);
-      navigate('/')
-      // Handle successful sign-in (e.g., redirect to dashboard)
+      toast.success('Sign in successful!');
+      setTimeout(() => {
+        navigate('/');
+      }, 2000); // Redirect after 2 seconds
     } catch (error) {
+      toast.error('Sign in failed. Please try again.');
       dispatch(signinFailure(error.message));
       console.error('Error:', error.response ? error.response.data : error.message);
-
     }
   };
 
@@ -88,6 +91,7 @@ const SignIn = () => {
         <OAuth />
         <p className="mt-4 text-center">Dont have an account? <Link to='/signup' className="text-blue-500 hover:underline">Sign Up</Link></p>
       </form>
+      <ToastContainer />
     </div>
   );
 };

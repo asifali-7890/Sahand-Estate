@@ -3,6 +3,9 @@ import { useRef, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, signOutUserStart, signOutUserSuccess, signOutUserFailure } from '../redux/user/userSlice'; // Import the new actions
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { FaSpinner } from 'react-icons/fa';
 
 const Profile = () => {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -40,9 +43,10 @@ const Profile = () => {
       const response = await axios.put(`/api/user/update/${currentUser._id}`, formData, {
         withCredentials: true // Ensure cookies are sent with the request
       });
-      console.log('Profile updated:', response.data);
+      // console.log('Profile updated:', response.data);
       dispatch(updateUserSuccess(response.data.user)); // Update the Redux state with the new user data
       setSuccess(true); // Set success message
+      toast.success('Profile updated successfully!');
     } catch (error) {
       console.error('Error updating profile:', error.response ? error.response.data : error.message);
       dispatch(updateUserFailure());
@@ -89,7 +93,7 @@ const Profile = () => {
           Authorization: `Bearer ${currentUser.token}`
         }
       });
-      console.log('User listings:', response.data);
+      // console.log('User listings:', response.data);
       setListings(response.data.listings); // Set the listings state
     } catch (error) {
       setShowListingsError(true);
@@ -117,7 +121,7 @@ const Profile = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
         <input type="file" ref={fileRef} hidden accept='image/*' />
-        <img src={currentUser?.avatar} alt="Avatar" className="w-24 h-24 rounded-full mx-auto mb-4" />
+        <img src={currentUser?.avatar} alt="Avatar" className="w-24 h-24 rounded-full mx-auto mb-4 object-cover" />
         <form onSubmit={handleUpdate}>
           <div className="mb-4">
             <label htmlFor="username" className="block text-gray-700">Username</label>
@@ -153,14 +157,23 @@ const Profile = () => {
           </div>
           <button
             type="submit"
-            className={`w-full bg-blue-600 text-white py-2 rounded-full mb-4 ${isFetching ? 'cursor-not-allowed opacity-50' : ''}`}
+            className={`w-full mb-4 shadow-lg text-white py-2 rounded-full font-medium transition-all duration-200 ease-in-out transform ${isFetching
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-red-500 hover:scale-105 hover:bg-blue-600 active:scale-95"
+              }`}
             disabled={isFetching}
           >
-            {isFetching ? 'Updating...' : 'Update'}
+            {isFetching ? (
+              <div className="flex items-center justify-center">
+                <FaSpinner className="animate-spin mr-2" /> Processing...
+              </div>
+            ) : (
+              "Update"
+            )}
           </button>
         </form>
         {error && <p className="mt-4 text-center text-red-500">Error updating profile. Please try again.</p>}
-        {success && <p className="mt-4 text-center text-green-500">Profile updated successfully!</p>}
+        {success && <p className="mt-4 text-center text-green-500 mb-3">Profile updated successfully!</p>}
         <button
           onClick={handleCreateListing}
           className="w-full bg-green-600 text-white py-2 rounded-full mb-4"
@@ -173,36 +186,44 @@ const Profile = () => {
         >
           Show Listings
         </button>
-        {showListingsError && <p className="mt-4 text-center text-red-500">Error fetching listings. Please try again.</p>}
+        {showListingsError && <p className="mt-4 text-center text-red-500">No listings available. Fill some...</p>}
         <div className="mt-4">
           {listings.map((listing) => (
             <div
               key={listing._id}
-              className="border rounded-lg p-3 flex justify-between items-center gap-4"
+              className="border mt-2 rounded-lg p-4 flex flex-row md:flex-row justify-between items-center gap-4 shadow-sm"
             >
-              <Link to={`/listing/${listing._id}`}>
-                <img
-                  src={listing.imageUrls?.[0] || defaultImageUrl}
-                  alt="listing cover"
-                  className="h-16 w-16 object-contain"
-                />
-              </Link>
-              <Link
-                className="text-slate-700 font-semibold hover:underline truncate flex-1"
-                to={`/listing/${listing._id}`}
-              >
-                <p>{listing.name}</p>
-              </Link>
+              {/* Listing Image */}
+              <div className="flex flex-col sm:flex-row gap-2 items-center">
+                <Link to={`/listing/${listing._id}`} className="flex-shrink-0">
+                  <img
+                    src={listing.imageUrls?.[0] || defaultImageUrl}
+                    alt={`${listing.name} cover`}
+                    className="h-20 w-20 rounded-md object-cover"
+                  />
+                </Link>
 
-              <div className="flex flex-col items-center">
+                {/* Listing Details */}
+                <Link
+                  to={`/listing/${listing._id}`}
+                  className="text-slate-700 font-semibold hover:underline truncate flex-1"
+                >
+                  <p className="text-lg">{listing.name}</p>
+                </Link>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col items-center space-y-2">
                 <button
                   onClick={() => handleDeleteListing(listing._id)}
-                  className="text-red-700 uppercase"
+                  className="text-red-600 font-medium uppercase hover:text-red-800"
                 >
                   Delete
                 </button>
                 <Link to={`/edit-listing/${listing._id}`}>
-                  <button className="text-green-700 uppercase">Edit</button>
+                  <button className="text-green-600 font-medium uppercase hover:text-green-800">
+                    Edit
+                  </button>
                 </Link>
               </div>
             </div>
@@ -224,6 +245,7 @@ const Profile = () => {
           </span>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

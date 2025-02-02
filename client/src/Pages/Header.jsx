@@ -32,7 +32,7 @@ export default function Header() {
                 <h1 className='text-sm sm:text-xl font-bold flex flex-wrap'>
                     <Link to={'/'}>
                         <span className='text-slate-500'>
-                            Sahand
+                            Asif
                         </span>
                         <span className='text-slate-700'>
                             Estate
@@ -50,7 +50,7 @@ export default function Header() {
                     <FaSearch onClick={handleSubmit} className='text-slate-600' />
                 </form>
                 <div className='flex gap-2'>
-                    <ul className='flex gap-2'>
+                    <ul className='flex gap-2 font-semibold hover:underline'>
                         <li className='text-slate-500 hidden sm:inline hover:underline'>
                             <Link to="/">
                                 Home
@@ -64,7 +64,7 @@ export default function Header() {
                         <li className='text-slate-500 hover:underline'>
                             {currentUser ? (
                                 <Link to="/profile">
-                                    <img src={currentUser?.avatar} alt="Avatar" className="w-8 h-8 rounded-full" />
+                                    <img src={currentUser?.avatar} alt="Avatar" className="w-8 h-8 rounded-full object-cover" />
                                 </Link>
                             ) : (
                                 <Link to="/signin">

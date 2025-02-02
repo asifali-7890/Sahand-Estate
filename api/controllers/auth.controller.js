@@ -45,7 +45,7 @@ export const signin = async (req, res, next) => {
         }
 
         // Generate a JWT token
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
 
         // Set the token in an HTTP-only cookie
         res.cookie('auth_token', token, { httpOnly: true });
@@ -61,12 +61,12 @@ export const signin = async (req, res, next) => {
 
 export const google = async (req, res, next) => {
     const { email, name, photo } = req.body;
-    console.log('error checking....')
+    // console.log('error checking....')
     try {
         // Find the user by email
         let user = await User.findOne({ email });
-        console.log('user', user);
-        console.log('process.env.JWT_SECRET', process.env.JWT_SECRET)
+        // console.log('user', user);
+        // console.log('process.env.JWT_SECRET', process.env.JWT_SECRET)
 
         if (!process.env.JWT_SECRET) {
             return;
@@ -74,7 +74,7 @@ export const google = async (req, res, next) => {
 
         if (user) {
             // User exists, generate a JWT token
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
 
             // Set the token in an HTTP-only cookie
             res.cookie('auth_token', token, { httpOnly: true });
@@ -95,7 +95,7 @@ export const google = async (req, res, next) => {
             await newUser.save();
 
             // Generate a JWT token
-            const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '2h' });
 
             // Set the token in an HTTP-only cookie
             res.cookie('auth_token', token, { httpOnly: true });

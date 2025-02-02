@@ -28,12 +28,19 @@ export const createListing = async (req, res, next) => {
     }
 };
 
+
 export const getUserListings = async (req, res, next) => {
     const { id } = req.params;
 
+    // Check if id is a valid ObjectId
+    if (!id) {
+        return next(createError(400, 'Invalid user ID'));
+    }
+
     try {
+        // Query using the valid ObjectId
         const listings = await Listing.find({ userRef: id });
-        if (!listings) {
+        if (!listings || listings.length === 0) {
             return next(createError(404, 'Listings not found'));
         }
         res.status(200).json({ message: 'Listings retrieved successfully', listings });
@@ -42,6 +49,7 @@ export const getUserListings = async (req, res, next) => {
         next(createError(500, 'Error retrieving listings'));
     }
 };
+
 
 export const deleteListing = async (req, res, next) => {
     const { id } = req.params;
@@ -105,7 +113,7 @@ export const getListingById = async (req, res, next) => {
 
 
 export const getListings = async (req, res, next) => {
-    console.log('Request reached getListings'); // Add this line
+    // console.log('Request reached getListings'); // Add this line
     try {
         const limit = parseInt(req.query.limit) || 9;
         const startIndex = parseInt(req.query.startIndex) || 0;
@@ -139,17 +147,17 @@ export const getListings = async (req, res, next) => {
 
         const order = req.query.order || 'desc';
 
-        console.log('Query Parameters:', {
-            limit,
-            startIndex,
-            offer,
-            furnished,
-            parking,
-            type,
-            searchTerm,
-            sort,
-            order
-        });
+        // console.log('Query Parameters:', {
+        //     limit,
+        //     startIndex,
+        //     offer,
+        //     furnished,
+        //     parking,
+        //     type,
+        //     searchTerm,
+        //     sort,
+        //     order
+        // });
 
         const listings = await Listing.find({
             name: { $regex: searchTerm, $options: 'i' },
@@ -162,7 +170,7 @@ export const getListings = async (req, res, next) => {
             .limit(limit)
             .skip(startIndex);
 
-        console.log('Listings:', listings);
+        // console.log('Listings:', listings);
 
         return res.status(200).json(listings);
     } catch (error) {

@@ -40,7 +40,7 @@ const OAuth = () => {
 
             // Dispatch the signinSuccess action with the user data
             dispatch(signinSuccess(response.data.user));
-            console.log('User signed in:', user);
+            // console.log('User signed in:', user);
 
             // Navigate to the home page
             navigate('/');
