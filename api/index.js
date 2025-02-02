@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.route.js';
 import listingRoutes from './routes/listing.route.js'; // Import the listing routes
 import path from 'path'
 import { fileURLToPath } from 'url';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -24,17 +25,19 @@ app.use((req, res, next) => {
     next();
 });
 
+// Enable CORS
+app.use(cors());
+
 // MongoDB connection string
 const dbURI = process.env.MONGO_URL;
 
 // Connect to MongoDB
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
-        // console.log('Connected to MongoDB');
-        // console.log('process.env.JWT_SECRET', process.env.JWT_SECRET);
+        console.log('Connected to MongoDB');
         // Start the server only after successful connection
         app.listen(PORT, () => {
-            // console.log(`Server is running on port ${PORT}`);
+            console.log(`Server is running on port ${PORT}`);
         });
     })
     .catch((err) => {
@@ -56,11 +59,9 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
-// console.log(path.join(__dirname, '../client/dist/index.html'));
-
 // Define a route for the root URL
 app.get('/', (req, res) => {
-    res.send({ name: 'Hello, World!' });
+    res.send('Welcome to the MERN Estate API');
 });
 
 // Error handling middleware
