@@ -31,10 +31,13 @@ app.use(cors());
 
 // Use helmet for security
 app.use(
-    helmet({
-        crossOriginResourcePolicy: false,
+    helmet.contentSecurityPolicy({
+        useDefaults: true,
+        directives: {
+            "img-src": ["'self'", "https: data:"]
+        }
     })
-);
+)
 
 // MongoDB connection string
 const dbURI = process.env.MONGO_URL;
