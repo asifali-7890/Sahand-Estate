@@ -13,7 +13,7 @@ import helmet from 'helmet';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // Middleware to parse JSON bodies and cookies
 app.use(express.json());
@@ -30,14 +30,18 @@ app.use((req, res, next) => {
 app.use(cors());
 
 // Use helmet for security
+// Use helmet for 
 app.use(
-    helmet.contentSecurityPolicy({
-        useDefaults: true,
-        directives: {
-            "img-src": ["'self'", "https: data:"]
+    helmet({
+        contentSecurityPolicy: {
+            useDefaults: true,
+            directives: {
+                "script-src": ["'self'", "https://apis.google.com"],
+                "img-src": ["'self'", "https:", "data:"]
+            }
         }
     })
-)
+);
 
 // MongoDB connection string
 const dbURI = process.env.MONGO_URL;
