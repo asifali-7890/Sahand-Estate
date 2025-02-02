@@ -195,7 +195,7 @@ const Profile = () => {
             >
               {/* Listing Image */}
               <div className="flex flex-col sm:flex-row gap-2 items-center">
-                <Link to={`/listing/${listing._id}`} className="flex-shrink-0">
+                <Link to={`/listing/${listing._id}`} className="flex-shrink-0 self-start">
                   <img
                     src={listing.imageUrls?.[0] || defaultImageUrl}
                     alt={`${listing.name} cover`}
@@ -208,7 +208,7 @@ const Profile = () => {
                   to={`/listing/${listing._id}`}
                   className="text-slate-700 font-semibold hover:underline truncate flex-1"
                 >
-                  <p className="text-lg">{listing.name}</p>
+                  <p className="text-lg whitespace-normal">{listing.name}</p>
                 </Link>
               </div>
 

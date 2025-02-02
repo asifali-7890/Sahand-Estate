@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
 import listingRoutes from './routes/listing.route.js'; // Import the listing routes
-
+import path from 'path'
 
 dotenv.config();
 
@@ -29,7 +29,8 @@ const dbURI = process.env.MONGO_URL;
 // Connect to MongoDB
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
-        // console.log('Connected to MongoDB');
+        console.log('Connected to MongoDB');
+        console.log('path.resolve()', path.resolve() + '/client/dist/index.html');
         // console.log('process.env.JWT_SECRET', process.env.JWT_SECRET);
         // Start the server only after successful connection
         app.listen(PORT, () => {
@@ -44,6 +45,12 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/listing', listingRoutes); // Use the listing routes
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+})
 
 
 // Define a route for the root URL

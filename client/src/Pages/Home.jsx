@@ -46,7 +46,7 @@ export default function Home() {
     fetchOfferListings();
   }, []);
 
-  const defaultImageUrl = 'https://th.bing.com/th/id/OIP.bDMr_n5MrMTjTdFjXIy3nAHaEo?rs=1&pid=ImgDetMain';
+  const defaultImageUrl = 'https://th.bing.com/th/id/OIP.7FVytLswipswIy7Cj7pe_QHaE8?rs=1&pid=ImgDetMain';
 
   return (
     <div>
