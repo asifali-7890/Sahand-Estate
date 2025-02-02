@@ -31,17 +31,17 @@ app.use(cors());
 
 // Use helmet for security
 // Use helmet for 
-app.use(
-    helmet({
-        contentSecurityPolicy: {
-            useDefaults: true,
-            directives: {
-                "script-src": ["'self'", "https://apis.google.com"],
-                "img-src": ["'self'", "https:", "data:"]
-            }
-        }
-    })
-);
+// app.use(
+//     helmet({
+//         contentSecurityPolicy: {
+//             useDefaults: true,
+//             directives: {
+//                 "script-src": ["'self'", "https://apis.google.com"],
+//                 "img-src": ["'self'", "https:", "data:"]
+//             }
+//         }
+//     })
+// );
 
 // MongoDB connection string
 const dbURI = process.env.MONGO_URL;
