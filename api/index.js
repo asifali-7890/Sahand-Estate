@@ -5,9 +5,10 @@ import cookieParser from 'cookie-parser';
 import userRoutes from './routes/user.route.js';
 import authRoutes from './routes/auth.route.js';
 import listingRoutes from './routes/listing.route.js'; // Import the listing routes
-import path from 'path'
+import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
+import helmet from 'helmet';
 
 dotenv.config();
 
@@ -27,6 +28,13 @@ app.use((req, res, next) => {
 
 // Enable CORS
 app.use(cors());
+
+// Use helmet for security
+app.use(
+    helmet({
+        crossOriginResourcePolicy: false,
+    })
+);
 
 // MongoDB connection string
 const dbURI = process.env.MONGO_URL;
